@@ -17,7 +17,7 @@ class music(commands.Cog):
 
         self.vc = ""
 
-     #searching the item on youtube
+     #searching the item on YouTube
     def search_yt(self, item):
         with YoutubeDL(self.YDL_OPTIONS) as ydl:
             try: 
@@ -50,11 +50,14 @@ class music(commands.Cog):
             
             #try to connect to voice channel if you are not already connected
 
-            if self.vc == "" or not self.vc.is_connected() or self.vc == None:
-                self.vc = await self.music_queue[0][1].connect()
+            if self.vc != "" and self.vc.is_connected():
+                if self.vc is not None:
+                    await self.vc.move_to(self.music_queue[0][1])
+                else:
+                    self.vc = await self.music_queue[0][1].connect()
             else:
-                await self.vc.move_to(self.music_queue[0][1])
-            
+                self.vc = await self.music_queue[0][1].connect()
+
             print(self.music_queue)
             #remove the first element as you are currently playing it
             self.music_queue.pop(0)
@@ -77,8 +80,7 @@ class music(commands.Cog):
         embedhelp.set_thumbnail(url=self.client.user.avatar_url)
         await ctx.send(embed=embedhelp)
 
-
-    @commands.command(name="play", help="Toca uma música do YouTube",aliases=['p','tocar'])
+    @commands.command(name="play", help="Toca uma música do YouTube",aliases=['play','tocar'])
     async def p(self, ctx, *args):
         query = " ".join(args)
         
@@ -108,8 +110,8 @@ class music(commands.Cog):
                 )
                 await ctx.send(embed=embedvc)
                 self.music_queue.append([song, voice_channel])
-                
-                if self.is_playing == False:
+
+                if not self.is_playing:
                     await self.play_music()
 
     @commands.command(name="queue", help="Mostra as atuais músicas da fila.",aliases=['q','fila'])
@@ -132,7 +134,7 @@ class music(commands.Cog):
             )
             await ctx.send(embed=embedvc)
 
-    @commands.command(name="skip", help="Pula a atual música que está tocando.",aliases=['pular'])
+    @commands.command(name="skip", help="Pular a atual música que está tocando.",aliases=['pular'])
     @commands.has_permissions(manage_channels=True)
     async def skip(self, ctx):
         if self.vc != "" and self.vc:

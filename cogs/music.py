@@ -1,7 +1,7 @@
-import discord
-from discord.ext import commands
+import discord # type: ignore
+from discord.ext import commands # type: ignore
 
-from youtube_dl import YoutubeDL
+from youtube_dl import YoutubeDL # type: ignore
 
 class music(commands.Cog):
     def __init__(self, client):
@@ -37,7 +37,7 @@ class music(commands.Cog):
             #remove the first element as you are currently playing it
             self.music_queue.pop(0)
 
-            self.vc.play(discord.FFmpegPCMAudio(m_url, **self.FFMPEG_OPTIONS), after=lambda e: self.play_next())
+            self.vc.play(discord.FFmpegPCMAudio(m_url, **self.FFMPEG_OPTIONS), after=lambda e: self.play_next()) # type: ignore
         else:
             self.is_playing = False
 
@@ -50,9 +50,9 @@ class music(commands.Cog):
             
             #try to connect to voice channel if you are not already connected
 
-            if self.vc != "" and self.vc.is_connected():
+            if self.vc != "" and self.vc.is_connected(): # type: ignore
                 if self.vc is not None:
-                    await self.vc.move_to(self.music_queue[0][1])
+                    await self.vc.move_to(self.music_queue[0][1]) # type: ignore
                 else:
                     self.vc = await self.music_queue[0][1].connect()
             else:
@@ -62,10 +62,10 @@ class music(commands.Cog):
             #remove the first element as you are currently playing it
             self.music_queue.pop(0)
 
-            self.vc.play(discord.FFmpegPCMAudio(m_url, **self.FFMPEG_OPTIONS), after=lambda e: self.play_next())
+            self.vc.play(discord.FFmpegPCMAudio(m_url, **self.FFMPEG_OPTIONS), after=lambda e: self.play_next()) # type: ignore
         else:
             self.is_playing = False
-            await self.vc.disconnect()
+            await self.vc.disconnect() # type: ignore
 
     @commands.command(name="help",alisases=['ajuda'],help="Comando de ajuda")
     async def help(self,ctx):
@@ -106,7 +106,7 @@ class music(commands.Cog):
             else:
                 embedvc = discord.Embed(
                     colour= 32768,#green
-                    description = f"Você adicionou a música **{song['title']}** à fila!\n\n[Crie seu próprio Bot de Música](https://youtu.be/YGx0xNHzjgE)"
+                    description = f"Você adicionou a música **{song['title']}** à fila!\n\n[Crie seu próprio Bot de Música](https://youtu.be/YGx0xNHzjgE)" # type: ignore
                 )
                 await ctx.send(embed=embedvc)
                 self.music_queue.append([song, voice_channel])
@@ -138,7 +138,7 @@ class music(commands.Cog):
     @commands.has_permissions(manage_channels=True)
     async def skip(self, ctx):
         if self.vc != "" and self.vc:
-            self.vc.stop()
+            self.vc.stop() # type: ignore
             #try to play next in the queue if it exists
             await self.play_music()
             embedvc = discord.Embed(
